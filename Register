@@ -1,0 +1,90 @@
+using PlayFab;
+using PlayFab.ClientModels;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace LauncherTest
+{
+    public partial class Register : Form
+    {
+        public Register()
+        {
+            InitializeComponent();
+            textBox3.PasswordChar = '*';
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            PlayFabSettings.TitleId = "850C";
+
+            if (textBox1.Text == "" || textBox2.Text == "")
+
+            {
+                MessageBox.Show("Please Fill all the details");
+            }
+
+            else
+            {
+                MessageBox.Show("Registration Successfull");
+                var req = new RegisterPlayFabUserRequest { TitleId = "850C", Email = textBox2.Text, Password = textBox3.Text, RequireBothUsernameAndEmail = false, DisplayName = textBox1.Text, Username = textBox4.Text };
+                var loginTask = PlayFabClientAPI.RegisterPlayFabUserAsync(req);
+            }
+            
+            //        while (_running)
+            //        {
+            //            if (loginTask.IsCompleted) // You would probably want a more sophisticated way of tracking pending async API calls in a real game
+            //            {
+            //                OnLoginComplete(loginTask);
+            //            }
+
+            //            // Presumably this would be your main game loop, doing other things
+            //            Thread.Sleep(1);
+            //        }
+
+            //        Console.WriteLine("Done! Press any key to close");
+            //        Console.ReadKey(); // This halts the program and waits for the user
+            //    }
+
+            //    //write twice for register and login
+            //    private static void OnLoginComplete(Task<PlayFabResult<RegisterPlayFabUserResult>> taskResult)
+            //    {
+            //        var apiError = taskResult.Result.Error;
+            //        var apiResult = taskResult.Result.Result;
+
+            //        if (apiError != null)
+            //        {
+            //            Console.ForegroundColor = ConsoleColor.Red; // Make the error more visible
+            //            Console.WriteLine("Something went wrong with your first API call.  :(");
+            //            Console.WriteLine("Here's some debug information:");
+            //            Console.WriteLine(PlayFabUtil.GetErrorReport(apiError));
+            //            Console.ForegroundColor = ConsoleColor.Gray; // Reset to normal
+            //        }
+            //        else if (apiResult != null)
+            //        {
+            //            Console.WriteLine("Congratulations, you made your first successful API call!");
+            //        }
+
+            //        _running = false; // Because this is just an example, successful login triggers the end of the program
+            //    }
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            Form1 s1 = new Form1();
+            s1.Show();
+        }
+    }
+}

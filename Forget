@@ -1,0 +1,95 @@
+using PlayFab;
+using PlayFab.ClientModels;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace LauncherTest
+{
+    public partial class Forget : Form
+    {
+        public Forget()
+        {
+            InitializeComponent();
+        }
+
+        private void Forget_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            PlayFabSettings.TitleId = "850C";
+            var emailrecovery_Result = PlayFabClientAPI.SendAccountRecoveryEmailAsync(new PlayFab.ClientModels.SendAccountRecoveryEmailRequest{
+                Email = textBox1.Text,
+                TitleId = "850C"
+            });
+
+            this.Hide();
+            Form1 ss = new Form1();
+            ss.Show();
+            OnPasswordForgetComplete(emailrecovery_Result);
+
+        }
+         
+        private static void OnPasswordForgetComplete(Task<PlayFabResult<SendAccountRecoveryEmailResult>> emailrecovery_Result)
+        {
+
+            //Task<PlayFabResult<LoginResult>> task = taskResult;
+            Task task = null;
+            //TaskScheduler uiScheduler = TaskScheduler.FromCurrentSynchronizationContext();
+            //CancellationTokenSource taskCancelSource = new CancellationTokenSource();
+            //CancellationToken taskToken = taskCancelSource.Token;
+            task = Task.Factory.StartNew(() => {
+
+            try
+            {
+                var apiError = emailrecovery_Result.Result.Error;
+                    var apiResult = emailrecovery_Result.Result.Result;
+                    Console.WriteLine("HELLO" + apiError);
+                    var apiErrorCode = PlayFabUtil.GetErrorReport(apiError);
+                    if (apiError != null)
+                    {
+                        //Console.ForegroundColor = ConsoleColor.Red; // Make the error more visible
+                        //Console.WriteLine("Something went wrong with your first API call.  :(");
+                        MessageBox.Show("Something went wrong with your first API call.  :(");
+                        //Console.WriteLine("Here's some debug information:");
+                        Console.WriteLine(PlayFabUtil.GetErrorReport(apiError));
+                        //Console.ForegroundColor = ConsoleColor.Gray; // Reset to normal
+                        Console.WriteLine("4");
+                    }
+                    else if (apiResult != null)
+                    {
+                        Console.WriteLine("Congratulations, you made your first successful API call!");
+                        MessageBox.Show("" + apiResult);
+                    }
+                }
+                catch(AggregateException se)
+                {
+                    Console.WriteLine(se);
+                }
+
+
+            });
+
+
+            //    }, CancellationToken.None, TaskCreationOptions.None, uiScheduler);
+
+
+
+            //taskResult = Task<PlayFabResult<LoginResult>>.WaitAll();
+            //                    Task.WaitAll(new[] { taskResult});
+
+            Console.WriteLine("6");
+
+
+        }
+    }
+}
